@@ -92,10 +92,13 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-source /opt/ros/kinetic/setup.zsh
-export PATH=/usr/local/cuda/bin:$PATH
-export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
-
+# source /opt/ros/kinetic/setup.zsh
+# source ~/catkin_ws/devel/setup.zsh
+export PATH=/usr/local/cuda-9.0/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-9.0/extras/CUPTI/lib64
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/opt/TensorRT-3.0.4/lib
+#export CUDA_ROOT=/usr/local/cuda-9.0
 
 function Clion {
 	bash ~/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4127.32/bin/clion.sh
@@ -103,5 +106,9 @@ function Clion {
 
 alias screenshot='gnome-screenshot -a -f ~/Pictures/screenshot-temp && xclip -selection clipboard -t image/png -i ~/Pictures/screenshot-temp'
 
+alias catkinbuild='catkin build  --force-cmake -G"Eclipse CDT4 - Unix Makefiles" && bash eclipsebuild.sh' 
 tmux
 
+
+source ~/car_tec_ws/devel/setup.zsh
+#export PYTHONPATH="/usr/local/lib/python3.5/dist-packages:$PYTHONPATH"
