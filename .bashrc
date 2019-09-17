@@ -40,28 +40,60 @@ case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac
 
+####### add git branch ########
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+force_color_prompt=yes
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+    # We have color support; assume it's compliant with Ecma-48
+    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+    # a case would tend to support setf rather than setaf.)
+    color_prompt=yes
+    else
+    color_prompt=
+    fi
+fi
+#if [ "$color_prompt" = yes ]; then
+#    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+#else
+#    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+#fi
+# SHOW GIT BRANCHES IN COLOUR
+parse_git_branch() {
+ git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+}
+if [ "$color_prompt" = yes ]; then
+ PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;31m\]$(parse_git_branch)\[\033[00m\]\$ '
+else
+ PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w$(parse_git_branch)\$ '
+fi
+unset color_prompt force_color_prompt
+###### add git branch end
+
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
 #force_color_prompt=yes
 
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
+#if [ -n "$force_color_prompt" ]; then
+#    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+#	# We have color support; assume it's compliant with Ecma-48
+#	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+#	# a case would tend to support setf rather than setaf.)
+#	color_prompt=yes
+#   else
+#	color_prompt=
+#    fi
+#fi
 
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
+#if [ "$color_prompt" = yes ]; then
+#    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+#else
+#    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+#fi
+#unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -116,7 +148,44 @@ if ! shopt -oq posix; then
   fi
 fi
 
+#google-drive-ocamlfuse ~/googledrive
 
-alias python2='python'
-alias python='python3'
-alias caca='cd ~/code/ros'
+
+# PIL Aliases
+export AMZMPC=/home/vjose/0_AMZ/mpcurv
+export PATH=$PATH:~/local/bin
+export ROS_ROOT=/opt/ros/kinetic/share/ros
+export ROS_WORKSPACE=/home/vjose/autonomous_2019/
+
+source /opt/ros/kinetic/setup.bash
+source /home/vjose/autonomous_2019/devel/setup.bash
+
+# AMZ 2019 Environment variables
+export PIL_ROOT=/home/vjose/autonomous_2019
+
+#alias amzsource = "source amz_aliases.sh; PIL_source"
+source /home/vjose/autonomous_2019/amz_aliases.sh
+export EDITOR=vim
+export PYTHONPATH=/home/vjose/opt/FORCES_client:${PYTHONPATH}
+
+alias dev-mpcurv=~/./dev-mpcurv
+alias dev-cpp=~/./dev-cpp
+alias dev-kill="tmux kill-server"
+
+export PATH=$PATH:/home/vjose/opt/julia
+export PATH=$PATH:/home/vjose/.cargo/bin
+
+# AMZ aliases
+alias amzbuild_debug_info="catkin config -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON; catkin build"
+alias amzbuild_debug="catkin config -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON; catkin build"
+alias amzbuild_release="catkin config -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON; catkin build"
+alias amzrun_mpcc="roslaunch fssim_interface mpcc_simulation.launch"
+alias amzrun_mpcurv="roslaunch fssim_interface mpcurv_simulation.launch"
+#alias amzrun="roslaunch fssim_interface local_simulation.launch"
+alias amzclion="/./opt/clion-2018.3.4/bin/clion.sh"
+alias mpcbuild="catkin build mpcurv"
+
+# Set vi keybindings for the terminal
+set -o vi
+
+
