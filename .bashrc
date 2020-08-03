@@ -117,7 +117,7 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
 alias ll='ls -alF'
@@ -148,34 +148,28 @@ if ! shopt -oq posix; then
   fi
 fi
 
-#google-drive-ocamlfuse ~/googledrive
-
+# Start tmux with shell
+if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+  exec tmux
+fi
 
 # PIL Aliases
-export AMZMPC=/home/vjose/0_AMZ/mpcurv
 export PATH=$PATH:~/local/bin
-export ROS_ROOT=/opt/ros/kinetic/share/ros
-export ROS_WORKSPACE=/home/vjose/autonomous_2019/
 
-source /opt/ros/kinetic/setup.bash
-source /home/vjose/autonomous_2019/devel/setup.bash
-
-# AMZ 2019 Environment variables
-export PIL_ROOT=/home/vjose/autonomous_2019
-
-#alias amzsource = "source amz_aliases.sh; PIL_source"
-source /home/vjose/autonomous_2019/amz_aliases.sh
 export EDITOR=vim
-export PYTHONPATH=/home/vjose/opt/FORCES_client:${PYTHONPATH}
-
-alias dev-mpcurv=~/./dev-mpcurv
-alias dev-cpp=~/./dev-cpp
-alias dev-kill="tmux kill-server"
 
 export PATH=$PATH:/home/vjose/opt/julia
 export PATH=$PATH:/home/vjose/.cargo/bin
 
-# AMZ aliases
+# AMZ 2019 Environment variables and aliases
+alias amzsource="source amz_aliases.sh; PIL_source"
+export AMZMPC=/home/vjose/0_AMZ/mpcurv
+# export PIL_ROOT=/home/vjose/0_AMZ/autonomous_2019
+# export ROS_WORKSPACE=/home/vjose/0_AMZ/autonomous_2019/
+# source /home/vjose/0_AMZ/autonomous_2019/devel/setup.bash
+# source /home/vjose/0_AMZ/autonomous_2019/amz_aliases.sh
+
+# AMZ  misc aliases
 alias amzbuild_debug_info="catkin config -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_EXPORT_COMPILE_COMMANDS=ON; catkin build"
 alias amzbuild_debug="catkin config -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON; catkin build"
 alias amzbuild_release="catkin config -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON; catkin build"
@@ -188,4 +182,38 @@ alias mpcbuild="catkin build mpcurv"
 # Set vi keybindings for the terminal
 set -o vi
 
+# algolab aliases
+source ~/.algolab-bashrc.bash
 
+# RL utilities, mujoco
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/.mujoco/mjpro150/bin/
+export PATH="$LD_LIBRARY_PATH:$PATH"
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/vjose/.mujoco/mjpro150/bin
+
+# # >>> conda initialize >>>
+# # !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/vjose/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 1 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/vjose/miniconda3/etc/profile.d/conda.sh" ]; then
+. "/home/vjose/miniconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+    else
+export PATH="/home/vjose/miniconda3/bin:$PATH"  # commented out by conda initialize
+    fi
+fi
+# unset __conda_setup
+# # <<< conda initialize <<<
+
+# Set mujoco path
+export MUJOCO_PY_MJPRO_PATH=~/.mujoco/mjpro150
+export CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH:/usr/include/python2.7/"
+export CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH:/usr/include/pygtk-2.0/"
+
+# Make sure local bin is found before the default system one because the python link is broken
+export PATH=/usr/local/bin:$PATH
+
+# ACADOS
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"~/1_Code/acados/lib"
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

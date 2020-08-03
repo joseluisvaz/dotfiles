@@ -1,59 +1,65 @@
 imap kj <Esc>
 set pastetoggle=<f9>
 
-" call plug#begin('~/.vim/plugged')
-"     Plug 'taketwo/vim-ros'
-" call plug#end()
-"
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 " Smart auto-indentation for Python
 Plugin 'vim-scripts/indentpython.vim'
+
 " Auto-completing engine
-" Plugin 'Valloric/YouCompleteMe'
-" Syntax checker
-Plugin 'vim-syntastic/syntastic'
-" Python backend for 'syntastic'
-Plugin 'nvie/vim-flake8'
-" Status bar (powerline)
-Plugin 'vim-airline/vim-airline'
+Plugin 'Valloric/YouCompleteMe'
+
+" Linters
+Plugin 'dense-analysis/ale'
+
 " Awesome staring screen for Vim
 Plugin 'mhinz/vim-startify'
 " File manager
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
+
 " Search bar
 Plugin 'kien/ctrlp.vim'
+
 " Theme
-Plugin 'crusoexia/vim-monokai'
-" Powerful commenting utility
-Plugin 'scrooloose/nerdcommenter'
-" Rich python syntax highlighting
-Plugin 'kh3phr3n/python-syntax'
-" latex shit
-Plugin 'lervag/vimtex'
-"Plugin 'vim-latex/vim-latex'
-Plugin 'xuhdev/vim-latex-live-preview'
+Plugin 'morhetz/gruvbox'
+Plugin 'arzg/vim-colors-xcode'
 
 " git diffs
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
-"theme
-Plugin 'morhetz/gruvbox'
+Plugin 'tpope/vim-rhubarb'
+
 " For integration with tmux
 Plugin 'jpalardy/vim-slime'
 
-" Deep learning auto completion
-Plugin 'zxqfl/tabnine-vim'
+" Autopep8
+Plugin 'tell-k/vim-autopep8'
+
+" Syntax
+Plugin 'sheerun/vim-polyglot'
+
+" Status bar (powerline)
+Plugin 'itchyny/lightline.vim'
+
+" Fuzzy searcher
+Plugin 'junegunn/fzf.vim'
+
+" Autocompletion for python
+Plugin 'davidhalter/jedi-vim'
+
+" Python automatic docstring
+Plugin 'heavenshell/vim-pydocstring'
+
+" Github them 
+Plugin 'cormacrelf/vim-colors-github'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -75,7 +81,8 @@ set expandtab     " When using <Tab>, put spaces instead of a <tab> characte
 " ---- Good to have for consistency
 set tabstop=4   " Number of spaces that a <Tab> in the file counts for
 set smarttab    " At <Tab> at beginning line inserts spaces set in shiftwidth
-set tw=80
+set colorcolumn=110
+set tw=110
 
 
 " F6 for opening NERDTree
@@ -115,36 +122,68 @@ autocmd FileType vim              let b:comment_leader = '" '
 noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
 noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
 
+
+" YcmCompleter
 nnoremap <leader>ji :YcmCompleter GoTo<CR>
 nnoremap <leader>jd :YcmCompleter GoToInclude<CR>
 nnoremap <leader>jf :YcmCompleter GoToDeclaration<CR>
 nnoremap <leader>jg :YcmCompleter GoToDefinition<CR>
 
 let g:ycm_confirm_extra_conf = 0
+let g:ycm_server_python_interpreter = '/usr/bin/python3'
+let g:ycm_add_preview_to_completeopt = 1
 
 " Closing braces
-inoremap " ""<left>
-inoremap ' ''<left>
-inoremap ( ()<left>
-inoremap [ []<left>
-inoremap { {}<left>
+" inoremap " ""<left>
+" inoremap ' ''<left>
+" inoremap ( ()<left>
+" inoremap [ []<left>
+" inoremap { {}<left>
 inoremap {<CR> {<CR>}<ESC>O
 inoremap {;<CR> {<CR>};<ESC>O
 
 nnoremap <F4> :! catkin config -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON; catkin build mpcurv <CR>
 nnoremap <F5> :! roslaunch fssim_interface mpcurv_simulation.launch <CR>
 
-au FileType cpp set softtabstop=2 | set shiftwidth=2
+au FileType cpp set softtabstop=4 | set shiftwidth=4
 au FileType python set softtabstop=4 | set shiftwidth=4
 
 " Themes
 " syntax enable
-colorscheme gruvbox 
 syntax enable
-set background=dark
+colorscheme gruvbox " gruvbox, vim-colors-scode 
+let g:lightline = { 'colorscheme': 'github' }
 
+" set background=dark
 set runtimepath^=~/.vim/bundle/ctrlp.vim
-
 let g:vimtex_view_method = 'zathura'
-
 let g:slime_python_ipython = 1
+
+
+" Leetcode keymappings
+nnoremap <leader>ll :LeetCodeList<cr>
+nnoremap <leader>lt :LeetCodeTest<cr>
+nnoremap <leader>ls :LeetCodeSubmit<cr>
+nnoremap <leader>li :LeetCodeSignIn<cr>
+
+" set leetcode
+let g:leetcode_browser='firefox'
+
+" Ale configs
+let g:ale_linters = {'python': ['mypy']}
+let g:ale_fixers = {'python': ['autopep8']}
+let g:ale_fix_on_save = 1
+
+" Lightbar 
+set laststatus=2
+set noshowmode
+let g:lightline = {'colorscheme': 'one dark'}
+
+" Fugitive
+set splitbelow
+
+" Needed for fzf
+set rtp+=/home/vjose/.fzf
+
+" Automatic python doctrings
+let g:pydocstring_formatter = 'google'
