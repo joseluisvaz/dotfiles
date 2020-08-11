@@ -10,27 +10,22 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
+
 " Smart auto-indentation for Python
 Plugin 'vim-scripts/indentpython.vim'
-
-" Auto-completing engine
-Plugin 'Valloric/YouCompleteMe'
 
 " Linters
 Plugin 'dense-analysis/ale'
 
 " Awesome staring screen for Vim
 Plugin 'mhinz/vim-startify'
+
 " File manager
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 " Search bar
 Plugin 'kien/ctrlp.vim'
-
-" Theme
-Plugin 'morhetz/gruvbox'
-Plugin 'arzg/vim-colors-xcode'
 
 " git diffs
 Plugin 'airblade/vim-gitgutter'
@@ -58,9 +53,6 @@ Plugin 'davidhalter/jedi-vim'
 " Python automatic docstring
 Plugin 'heavenshell/vim-pydocstring'
 
-" Github them 
-Plugin 'cormacrelf/vim-colors-github'
-
 call vundle#end()            " required
 filetype plugin indent on    " required
 
@@ -82,7 +74,7 @@ set expandtab     " When using <Tab>, put spaces instead of a <tab> characte
 set tabstop=4   " Number of spaces that a <Tab> in the file counts for
 set smarttab    " At <Tab> at beginning line inserts spaces set in shiftwidth
 set colorcolumn=110
-set tw=110
+set tw=120
 
 
 " F6 for opening NERDTree
@@ -151,8 +143,6 @@ au FileType python set softtabstop=4 | set shiftwidth=4
 " Themes
 " syntax enable
 syntax enable
-colorscheme gruvbox " gruvbox, vim-colors-scode 
-let g:lightline = { 'colorscheme': 'github' }
 
 " set background=dark
 set runtimepath^=~/.vim/bundle/ctrlp.vim
@@ -170,14 +160,13 @@ nnoremap <leader>li :LeetCodeSignIn<cr>
 let g:leetcode_browser='firefox'
 
 " Ale configs
-let g:ale_linters = {'python': ['mypy']}
-let g:ale_fixers = {'python': ['autopep8']}
+let g:ale_linters = {'python': ['mypy', 'flake8']}
+let g:ale_fixers = {'python': ['black', 'isort']}
 let g:ale_fix_on_save = 1
 
 " Lightbar 
 set laststatus=2
 set noshowmode
-let g:lightline = {'colorscheme': 'one dark'}
 
 " Fugitive
 set splitbelow
